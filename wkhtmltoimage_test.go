@@ -2,59 +2,74 @@ package wkhtmltoimage
 
 import (
 	"fmt"
-	"os"
 	"testing"
-	"github.com/praeto/wkhtmltoimage-go/api"
+	"os"
 )
 
-func TestConverter_Output(t *testing.T) {
-	gs := api.NewGlobalSettings()
-	gs.Set("fmt", "png")
-	gs.Set("encoding", "UTF-8")
-	gs.Set("crop-h", "630")
-	gs.Set("crop-w", "1200")
-	gs.Set("crop-x", "0")
-	gs.Set("crop-y", "0")
-	gs.Set("height", "630")
-	gs.Set("width", "1200")
-	//gs.Set("quiet", "")
-	gs.Set("out", "")
-	//gs.Set("in", "http://google.com")
-	//gs.Set("transparent", "true")
-
-	c := gs.NewConverter("<html><head><meta charset=\"UTF-8\"></head><body><h1>Есть тут кто?</h1></body></html>")
-	defer c.Destroy()
-
-	c.ProgressChanged = func(c *api.Converter, b int) {
-		fmt.Printf("Progress: %d\n", b)
+func TestFromString(t *testing.T) {
+	var (
+		err error
+		res []byte
+	)
+	ts := "<html><head><meta charset=\"UTF-8\"></head><body><h1>Есть тут кто?</h1></body></html>"
+	config := Config{
+		Format: "png",
+		Width: 1200,
+		Height: 630,
+		DisableSmartWidth: true,
+		//Quiet: true,
 	}
-	c.Error = func(c *api.Converter, msg string) {
-		fmt.Printf("error: %s\n", msg)
-	}
-	c.Warning = func(c *api.Converter, msg string) {
-		fmt.Printf("error: %s\n", msg)
-	}
-	c.Phase = func(c *api.Converter) {
-		fmt.Printf("Phase\n")
-	}
-
-	if err := c.Convert(); err != nil {
+	if res, err = FromString(ts, "testString.png", &config); err != nil {
 		fmt.Println(err.Error())
+		t.Fail()
 	}
 
-	fmt.Printf("Got error code: %d\n", c.ErrorCode())
+	if len(res) > 0 {
+		fmt.Println("success")
+	}
+}
 
-	lout, outp := c.Output()
+func TestFromUrl(t *testing.T) {
+	var (
+		err error
+		res []byte
+	)
+	config := Config{
+		Format: "png",
+		Width: 1200,
+		Height: 630,
+		DisableSmartWidth: true,
+		//Quiet: true,
+	}
+	if res, err = FromUrl("http://google.com", "testUrl.png", &config); err != nil {
+		fmt.Println(err.Error())
+		t.Fail()
+	}
 
-	fmt.Printf("Output %d char.s from conversion\n", lout)
+	if len(res) > 0 {
+		fmt.Println("success")
+	}
+}
 
-	if lout > 0 {
-		f, err := os.OpenFile("test.png", os.O_WRONLY|os.O_CREATE, os.ModePerm)
-		if err != nil {
-			fmt.Printf("Failed to open file: %s\n", err)
-		}
-		defer f.Close()
-		f.Truncate(0)
-		f.Write([]byte(outp))
+func TestFromFile(t *testing.T) {
+	var (
+		err error
+		res []byte
+	)
+	curDir, _ := os.Getwd()
+	config := Config{
+		Format: "png",
+		Width: 1200,
+		Height: 630,
+		DisableSmartWidth: true,
+		//Quiet: true,
+	}
+	if res, err = FromFile(curDir + "/testfiles/html.html", "testFile.png", &config); err != nil {
+		fmt.Println(err.Error())
+		t.Fail()
+	}
+
+	if len(res) > 0 {
+		fmt.Println("success")
 	}
 }

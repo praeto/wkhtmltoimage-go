@@ -21,7 +21,6 @@ import "C"
 
 import (
 	"unsafe"
-	"fmt"
 )
 
 type GlobalSettings struct {
@@ -34,6 +33,7 @@ type Converter struct {
 	Error           func(*Converter, string)
 	Warning         func(*Converter, string)
 	Phase           func(*Converter)
+	quiet			bool
 }
 
 var converterMap map[unsafe.Pointer]*Converter
@@ -55,10 +55,10 @@ func (gs *GlobalSettings) Set(name, value string) {
 	C.wkhtmltoimage_set_global_setting(gs.s, c_name, c_value)
 }
 
-func (gs *GlobalSettings) NewConverter(html string) *Converter {
+func (gs *GlobalSettings) NewConverter(html string, quiet bool) *Converter {
 	cHtml := C.CString(html)
 	defer C.free(unsafe.Pointer(cHtml))
-	c := &Converter{c: C.wkhtmltoimage_create_converter(gs.s, cHtml)}
+	c := &Converter{c: C.wkhtmltoimage_create_converter(gs.s, cHtml), quiet: quiet}
 	C.setup_callbacks(c.c)
 
 	return c
@@ -67,7 +67,7 @@ func (gs *GlobalSettings) NewConverter(html string) *Converter {
 //export progress_changed_cb
 func progress_changed_cb(p unsafe.Pointer, i C.int) {
 	conv := converterMap[p]
-	if conv.ProgressChanged != nil {
+	if conv.ProgressChanged != nil && !conv.quiet {
 		conv.ProgressChanged(conv, int(i))
 	}
 }
@@ -75,7 +75,7 @@ func progress_changed_cb(p unsafe.Pointer, i C.int) {
 //export error_cb
 func error_cb(p unsafe.Pointer, msg *C.char) {
 	conv := converterMap[p]
-	if conv.Error != nil {
+	if conv.Error != nil && !conv.quiet {
 		conv.Error(conv, C.GoString(msg))
 	}
 }
@@ -83,7 +83,7 @@ func error_cb(p unsafe.Pointer, msg *C.char) {
 //export warning_cb
 func warning_cb(p unsafe.Pointer, msg *C.char) {
 	conv := converterMap[p]
-	if conv.Warning != nil {
+	if conv.Warning != nil && !conv.quiet {
 		conv.Warning(conv, C.GoString(msg))
 	}
 }
@@ -91,12 +91,12 @@ func warning_cb(p unsafe.Pointer, msg *C.char) {
 //export phase_changed_cb
 func phase_changed_cb(p unsafe.Pointer) {
 	conv := converterMap[p]
-	if conv.Phase != nil {
+	if conv.Phase != nil && !conv.quiet {
 		conv.Phase(conv)
 	}
 }
 
-func (converter *Converter) Convert() error {
+func (converter *Converter) Convert() int {
 
 	// To route callbacks right, we need to save a reference
 	// to the converter object, base on the pointer.
@@ -104,12 +104,13 @@ func (converter *Converter) Convert() error {
 	status := C.wkhtmltoimage_convert(converter.c)
 	delete(converterMap, unsafe.Pointer(converter.c))
 	if status != C.int(0) {
-		return fmt.Errorf("Conversion failed with status; %d", status)
+		return converter.ErrorCode()
 	}
-	return nil
+	return 0
 }
 
 func (converter *Converter) Output() (int64, string) {
+	defer converter.Destroy()
 	cc := C.CString("")
 	ccc := (**C.uchar)(unsafe.Pointer(&cc))
 	ll := C.wkhtmltoimage_get_output(converter.c, ccc)
