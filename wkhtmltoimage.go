@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	TypeURL = iota
-	TypeFile = iota
-	TypeString = iota
+	typeURL    = iota
+	typeFile   = iota
+	typeString = iota
 )
 
 type Config struct {
@@ -45,6 +45,8 @@ type Config struct {
 	// false - Extend width to fit unbreakable content
 	// By default it is false
 	DisableSmartWidth bool
+	// Set the default text encoding, for input
+	Encoding string
 }
 
 // Convert URL file to IMG file
@@ -60,7 +62,7 @@ type Config struct {
 //		2. bytes of result image if output param is empty string
 // error: nil when success
 func FromUrl(url, output string, config *Config) ([]byte, error) {
-	return convert(url, output, TypeURL, config)
+	return convert(url, output, typeURL, config)
 }
 
 // Convert HTML file to IMG file
@@ -77,7 +79,7 @@ func FromUrl(url, output string, config *Config) ([]byte, error) {
 // error: nil when success
 func FromFile(filename, output string, config *Config) ([]byte, error) {
 
-	return convert(filename, output, TypeFile, config)
+	return convert(filename, output, typeFile, config)
 }
 
 // Convert given string file to IMG file
@@ -93,14 +95,14 @@ func FromFile(filename, output string, config *Config) ([]byte, error) {
 //		2. bytes of result image if output param is empty string
 // error: nil when success
 func FromString(string, output string, config *Config) ([]byte, error) {
-	return convert(string, output, TypeString, config)
+	return convert(string, output, typeString, config)
 }
 
 func convert(input, output string, dataType int, config *Config) ([]byte, error) {
 	var html string
 	gs := api.NewGlobalSettings()
 
-	if dataType < TypeString {
+	if dataType < typeString {
 		gs.Set("in", input)
 	} else {
 		html = input
@@ -112,6 +114,10 @@ func convert(input, output string, dataType int, config *Config) ([]byte, error)
 
 	if config.Format != "" {
 		gs.Set("fmt", config.Format)
+	}
+
+	if config.Encoding != "" {
+		gs.Set("encoding", config.Encoding)
 	}
 
 	if config.Height > 0 {

@@ -17,6 +17,7 @@ func TestFromString(t *testing.T) {
 		Width: 1200,
 		Height: 630,
 		DisableSmartWidth: true,
+		Encoding: "UTF-8",
 		//Quiet: true,
 	}
 	if res, err = FromString(ts, "testString.png", &config); err != nil {
@@ -39,6 +40,7 @@ func TestFromUrl(t *testing.T) {
 		Width: 1200,
 		Height: 630,
 		DisableSmartWidth: true,
+		Encoding: "UTF-8",
 		//Quiet: true,
 	}
 	if res, err = FromUrl("http://google.com", "testUrl.png", &config); err != nil {
@@ -62,6 +64,7 @@ func TestFromFile(t *testing.T) {
 		Width: 1200,
 		Height: 630,
 		DisableSmartWidth: true,
+		Encoding: "UTF-8",
 		//Quiet: true,
 	}
 	if res, err = FromFile(curDir + "/testfiles/html.html", "testFile.png", &config); err != nil {
