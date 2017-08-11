@@ -17,7 +17,7 @@ package api
 //  wkhtmltoimage_set_error_callback(c, (wkhtmltoimage_str_callback)error_cb);
 //  wkhtmltoimage_set_warning_callback(c, (wkhtmltoimage_str_callback)warning_cb);
 //  wkhtmltoimage_set_phase_changed_callback(c, (wkhtmltoimage_void_callback)phase_changed_cb);
-//  wkhtmltoimage_set_finished_callback(c, (wkhtmltoimage_void_callback)finished_cb);
+//  wkhtmltoimage_set_finished_callback(c, (wkhtmltoimage_int_callback)finished_cb);
 //}
 import "C"
 
