@@ -1,8 +1,8 @@
 package api
 
 /*
-#cgo CFLAGS: -I/usr/local/include -I/usr/include
-#cgo LDFLAGS: -L/usr/local/lib -L/usr/lib -lwkhtmltox -Wall -ansi -pedantic -ggdb
+#cgo CFLAGS: -I/usr/local/include
+#cgo LDFLAGS: -L/usr/local/lib -lwkhtmltox -Wall -ansi -pedantic -ggdb
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
