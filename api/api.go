@@ -1,24 +1,26 @@
 package api
 
-//#cgo CFLAGS: -I/usr/local/include
-//#cgo LDFLAGS: -L/usr/local/lib -lwkhtmltox -Wall -ansi -pedantic -ggdb
-//#include <stdbool.h>
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
-//#include <wkhtmltox/image.h>
-//extern void progress_changed_cb(void*, const int);
-//extern void error_cb(void*, char *msg);
-//extern void warning_cb(void*, char *msg);
-//extern void phase_changed_cb(void*);
-//extern void finished_cb(void*, const int);
-//static void setup_callbacks(wkhtmltoimage_converter * c) {
-//  wkhtmltoimage_set_progress_changed_callback(c, (wkhtmltoimage_int_callback)progress_changed_cb);
-//  wkhtmltoimage_set_error_callback(c, (wkhtmltoimage_str_callback)error_cb);
-//  wkhtmltoimage_set_warning_callback(c, (wkhtmltoimage_str_callback)warning_cb);
-//  wkhtmltoimage_set_phase_changed_callback(c, (wkhtmltoimage_void_callback)phase_changed_cb);
-//  wkhtmltoimage_set_finished_callback(c, (wkhtmltoimage_int_callback)finished_cb);
-//}
+/*
+#cgo CFLAGS: -I/usr/local/include -I/usr/include
+#cgo LDFLAGS: -L/usr/local/lib -L/usr/lib -lwkhtmltox -Wall -ansi -pedantic -ggdb
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <wkhtmltox/image.h>
+extern void progress_changed_cb(void*, const int);
+extern void error_cb(void*, char *msg);
+extern void warning_cb(void*, char *msg);
+extern void phase_changed_cb(void*);
+extern void finished_cb(void*, const int);
+static void setup_callbacks(wkhtmltoimage_converter * c) {
+  wkhtmltoimage_set_progress_changed_callback(c, (wkhtmltoimage_int_callback)progress_changed_cb);
+  wkhtmltoimage_set_error_callback(c, (wkhtmltoimage_str_callback)error_cb);
+  wkhtmltoimage_set_warning_callback(c, (wkhtmltoimage_str_callback)warning_cb);
+  wkhtmltoimage_set_phase_changed_callback(c, (wkhtmltoimage_void_callback)phase_changed_cb);
+  wkhtmltoimage_set_finished_callback(c, (wkhtmltoimage_int_callback)finished_cb);
+}
+*/
 import "C"
 
 import (
