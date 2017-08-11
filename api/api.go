@@ -11,11 +11,13 @@ package api
 //extern void error_cb(void*, char *msg);
 //extern void warning_cb(void*, char *msg);
 //extern void phase_changed_cb(void*);
+//extern void finished_cb(void*, const int);
 //static void setup_callbacks(wkhtmltoimage_converter * c) {
 //  wkhtmltoimage_set_progress_changed_callback(c, (wkhtmltoimage_int_callback)progress_changed_cb);
 //  wkhtmltoimage_set_error_callback(c, (wkhtmltoimage_str_callback)error_cb);
 //  wkhtmltoimage_set_warning_callback(c, (wkhtmltoimage_str_callback)warning_cb);
 //  wkhtmltoimage_set_phase_changed_callback(c, (wkhtmltoimage_void_callback)phase_changed_cb);
+//  wkhtmltoimage_set_finished_callback(c, (wkhtmltoimage_void_callback)finished_cb);
 //}
 import "C"
 
@@ -33,6 +35,7 @@ type Converter struct {
 	Error           func(*Converter, string)
 	Warning         func(*Converter, string)
 	Phase           func(*Converter)
+	Finished func(*Converter, int)
 	quiet			bool
 }
 
@@ -93,6 +96,14 @@ func phase_changed_cb(p unsafe.Pointer) {
 	conv := converterMap[p]
 	if conv.Phase != nil && !conv.quiet {
 		conv.Phase(conv)
+	}
+}
+
+//export finished_cb
+func finished_cb(c unsafe.Pointer, s C.int) {
+	conv := converterMap[c]
+	if conv.Finished != nil && !conv.quiet {
+		conv.Finished(conv, int(s))
 	}
 }
 

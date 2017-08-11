@@ -165,6 +165,7 @@ func convert(input, output string, dataType int, config *Config) ([]byte, error)
 	c.Error = conversionError
 	c.Warning = conversionWarning
 	c.Phase = conversionPhase
+	c.Finished = conversionFinished
 
 	if errCode := c.Convert(); errCode > 0 {
 		return nil, fmt.Errorf("Conversion failed with status; %d", errCode)
@@ -196,4 +197,6 @@ func conversionPhase(c *api.Converter) {
 	log.Printf("Phase\n")
 }
 
-
+func conversionFinished(c *api.Converter, b int) {
+	log.Printf("Finished: %d\n", b)
+}
