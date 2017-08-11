@@ -45,7 +45,8 @@ type Config struct {
 	// false - Extend width to fit unbreakable content
 	// By default it is false
 	DisableSmartWidth bool
-	// Set the default text encoding, for input
+	// Set the text encoding, for input
+	// By default is UTF-8
 	Encoding string
 }
 
@@ -118,6 +119,8 @@ func convert(input, output string, dataType int, config *Config) ([]byte, error)
 
 	if config.Encoding != "" {
 		gs.Set("encoding", config.Encoding)
+	} else {
+		gs.Set("encoding", "UTF-8")
 	}
 
 	if config.Height > 0 {
