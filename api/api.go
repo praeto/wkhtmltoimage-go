@@ -148,5 +148,5 @@ func (converter *Converter) CurrentPhase() (int, string) {
 
 func (converter *Converter) Destroy() {
 	C.wkhtmltoimage_destroy_converter(converter.c)
-	wkDeInit()
+	//wkDeInit()
 }
