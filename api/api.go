@@ -45,6 +45,7 @@ var converterMap map[unsafe.Pointer]*Converter
 
 func WKInit() {
 	converterMap = map[unsafe.Pointer]*Converter{}
+	C.wkhtmltoimage_deinit()
 	C.wkhtmltoimage_init(C.false)
 }
 
