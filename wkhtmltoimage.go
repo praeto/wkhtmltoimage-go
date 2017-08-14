@@ -101,6 +101,8 @@ func FromString(string, output string, config *Config) ([]byte, error) {
 
 func convert(input, output string, dataType int, config *Config) ([]byte, error) {
 	var html string
+	api.WKInit()
+	//defer api.WKDeInit()
 	gs := api.NewGlobalSettings()
 
 	if dataType < typeString {
