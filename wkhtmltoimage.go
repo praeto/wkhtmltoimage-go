@@ -160,6 +160,7 @@ func convert(input, output string, dataType int, config *Config) ([]byte, error)
 	}
 
 	c := gs.NewConverter(html, config.Quiet)
+	defer c.Destroy()
 
 	c.ProgressChanged = conversionProgressChanged
 	c.Error = conversionError

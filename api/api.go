@@ -123,7 +123,6 @@ func (converter *Converter) Convert() int {
 }
 
 func (converter *Converter) Output() (int64, string) {
-	defer converter.Destroy()
 	cc := C.CString("")
 	ccc := (**C.uchar)(unsafe.Pointer(&cc))
 	ll := C.wkhtmltoimage_get_output(converter.c, ccc)
