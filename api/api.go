@@ -43,12 +43,17 @@ type Converter struct {
 
 var converterMap map[unsafe.Pointer]*Converter
 
-func init() {
+func wkInit() {
 	converterMap = map[unsafe.Pointer]*Converter{}
 	C.wkhtmltoimage_init(C.false)
 }
 
+func wkDeInit() {
+	C.wkhtmltoimage_deinit()
+}
+
 func NewGlobalSettings() *GlobalSettings {
+	wkInit()
 	return &GlobalSettings{s: C.wkhtmltoimage_create_global_settings()}
 }
 
@@ -143,4 +148,5 @@ func (converter *Converter) CurrentPhase() (int, string) {
 
 func (converter *Converter) Destroy() {
 	C.wkhtmltoimage_destroy_converter(converter.c)
+	wkDeInit()
 }

@@ -132,19 +132,19 @@ func convert(input, output string, dataType int, config *Config) ([]byte, error)
 	}
 
 	if config.CropH > 0 {
-		gs.Set("crop-h", strconv.Itoa(config.CropH))
+		gs.Set("crop.height", strconv.Itoa(config.CropH))
 	}
 
 	if config.CropW > 0 {
-		gs.Set("crop-w", strconv.Itoa(config.CropW))
+		gs.Set("crop.width", strconv.Itoa(config.CropW))
 	}
 
 	if config.CropX > 0 {
-		gs.Set("crop-x", strconv.Itoa(config.CropX))
+		gs.Set("crop.left", strconv.Itoa(config.CropX))
 	}
 
 	if config.CropY > 0 {
-		gs.Set("crop-y", strconv.Itoa(config.CropY))
+		gs.Set("crop.top", strconv.Itoa(config.CropY))
 	}
 
 	if config.Quality > 0 {
