@@ -45,7 +45,6 @@ var converterMap map[unsafe.Pointer]*Converter
 
 func WKInit() {
 	converterMap = map[unsafe.Pointer]*Converter{}
-	C.wkhtmltoimage_deinit()
 	C.wkhtmltoimage_init(C.false)
 }
 
@@ -115,11 +114,11 @@ func (converter *Converter) Convert() int {
 	// To route callbacks right, we need to save a reference
 	// to the converter object, base on the pointer.
 	converterMap[unsafe.Pointer(converter.c)] = converter
-	status := C.wkhtmltoimage_convert(converter.c)
+	_ := C.wkhtmltoimage_convert(converter.c)
 	delete(converterMap, unsafe.Pointer(converter.c))
-	if status != C.int(0) {
-		return converter.ErrorCode()
-	}
+	//if status != C.int(0) {
+	//	return converter.ErrorCode()
+	//}
 	return 0
 }
 
